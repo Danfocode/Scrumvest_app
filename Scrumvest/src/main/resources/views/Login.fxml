@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="300.0" prefWidth="300.0" stylesheets="@/css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Scrumvest.controller.AuthController">
+    <VBox alignment="CENTER" layoutX="50.0" layoutY="50.0" prefHeight="250.0" prefWidth="200.0" spacing="15">
+        <Label text="Scrumvest - Login" styleClass="login-title"/>
+        
+        <TextField fx:id="emailField" promptText="Email" styleClass="login-input" prefWidth="180.0"/>
+        
+        <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="login-input" prefWidth="180.0"/>
+        
+        <!-- ✅ ComboBox para seleccionar el rol -->
+        <ComboBox fx:id="roleCombo" prefWidth="180.0" promptText="Seleccionar Rol"/>
+
+        <Button onAction="#handleLogin" text="Iniciar Sesión" styleClass="primary-button" prefWidth="180.0"/>
+        
+        <Button onAction="#goToRegister" text="Registrarse" styleClass="secondary-button" prefWidth="180.0"/>
+    </VBox>
+</AnchorPane>

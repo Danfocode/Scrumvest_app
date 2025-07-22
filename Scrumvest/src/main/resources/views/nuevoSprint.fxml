@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.example.Scrumvest.controller.NuevoSprintController"
+      stylesheets="@/css/styles.css"
+      spacing="20" alignment="TOP_CENTER" 
+      style="-fx-background-color: #F8FAFF; -fx-padding: 30; -fx-min-width: 450px; -fx-pref-width: 500px;">
+
+    <!-- Título del diálogo -->
+    <Label text="Nuevo Sprint" styleClass="dialog-title">
+        <font>
+            <Font size="20.0" />
+        </font>
+    </Label>
+
+    <!-- Formulario -->
+    <GridPane hgap="15" vgap="15" style="-fx-padding: 20 40;">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="120" prefWidth="150"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="250" prefWidth="300"/>
+        </columnConstraints>
+
+        <!-- Nombre -->
+        <Label text="Nombre del Sprint:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="nombreField" styleClass="form-input" GridPane.rowIndex="0" GridPane.columnIndex="1" 
+                  promptText="Ingrese el nombre del sprint"/>
+
+        <!-- Fecha Inicio -->
+        <Label text="Fecha de Inicio:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <DatePicker fx:id="fechaInicioPicker" styleClass="form-datepicker" GridPane.rowIndex="1" GridPane.columnIndex="1" 
+                   promptText="Seleccione fecha de inicio"/>
+
+        <!-- Fecha Fin -->
+        <Label text="Fecha de Finalización:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <DatePicker fx:id="fechaFinPicker" styleClass="form-datepicker" GridPane.rowIndex="2" GridPane.columnIndex="1" 
+                   promptText="Seleccione fecha de fin"/>
+    </GridPane>
+
+    <!-- Botones de acción -->
+    <HBox spacing="30" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button text="Cancelar" onAction="#handleCancelar" styleClass="secondary-button" minWidth="120"/>
+        <Button text="Guardar Sprint" onAction="#handleGuardar" styleClass="primary-button" minWidth="120" 
+                defaultButton="true"/>
+    </HBox>
+</VBox>

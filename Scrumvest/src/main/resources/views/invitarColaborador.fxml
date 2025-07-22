@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.Scrumvest.controller.InvitarColaboradorController"
+      stylesheets="@/css/styles.css"
+      spacing="20"
+      style="-fx-padding: 20;">
+
+    <Label text="Invitar Colaboradores" styleClass="label-title"/>
+
+    <HBox spacing="10">
+        <Label text="Rol:"/>
+        <ComboBox fx:id="rolCombo" prefWidth="150"/>
+    </HBox>
+
+    <TableView fx:id="usuariosTable" prefHeight="300" styleClass="table-view">
+        <columns>
+            <TableColumn fx:id="usernameColumn" text="Usuario" prefWidth="150"/>
+            <TableColumn fx:id="emailColumn" text="Correo" prefWidth="250"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#handleCancelar" styleClass="button-secondary"/>
+        <Button text="Invitar" onAction="#handleInvitar" styleClass="button-primary"/>
+    </HBox>
+
+</VBox>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.Scrumvest.controller.TareaController"
+      stylesheets="@/css/styles.css"
+      spacing="15"
+      style="-fx-padding: 20;">
+    
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Button text="← Volver a Sprints" onAction="#handleBackToSprints" styleClass="back-button"/>
+        <Label text="Tareas del Sprint" styleClass="label-title"/>
+    </HBox>
+    
+    <HBox spacing="10" style="-fx-padding: 0 0 10 0;">
+        <Button text="Refrescar" onAction="#handleRefresh" styleClass="button-secondary"/>
+        <Button text="Nueva Tarea" onAction="#handleNewTarea" styleClass="button-primary"/>
+        <Button text="Editar" onAction="#handleEditTarea" styleClass="button-secondary"/>
+        <Button text="Eliminar" onAction="#handleDeleteTarea" styleClass="danger-button"/>
+    </HBox>
+    
+    <TableView fx:id="tareasTable" styleClass="table-view">
+        <columns>
+            <TableColumn fx:id="nombreColumn" text="Nombre" prefWidth="150"/>
+            <TableColumn fx:id="descripcionColumn" text="Descripción" prefWidth="250"/>
+            <TableColumn fx:id="estadoColumn" text="Estado" prefWidth="100"/>
+            <TableColumn fx:id="prioridadColumn" text="Prioridad" prefWidth="80"/>
+            <TableColumn fx:id="fechaLimiteColumn" text="Fecha Límite" prefWidth="120"/>
+        </columns>
+    </TableView>
+</VBox>

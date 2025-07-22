@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.example.Scrumvest.controller.NuevoProyectoController"
+      stylesheets="@/css/styles.css"
+      spacing="20" alignment="TOP_CENTER" 
+      style="-fx-background-color: #F8FAFF; -fx-padding: 30; -fx-min-width: 450px;">
+
+    <Label text="Nuevo Proyecto" styleClass="dialog-title"/>
+
+    <GridPane hgap="15" vgap="15" style="-fx-padding: 20 40;">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="120" prefWidth="150"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="250" prefWidth="300"/>
+        </columnConstraints>
+
+        <!-- Nombre -->
+        <Label text="Nombre:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="nombreField" styleClass="form-input" GridPane.rowIndex="0" GridPane.columnIndex="1" 
+                  prefWidth="300"/>
+
+        <!-- Descripción -->
+        <Label text="Descripción:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextArea fx:id="descripcionField" styleClass="form-textarea" GridPane.rowIndex="1" GridPane.columnIndex="1" 
+                  wrapText="true" prefRowCount="4" prefWidth="300"/>
+
+        <!-- Fecha Inicio -->
+        <Label text="Fecha Inicio:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <DatePicker fx:id="fechaInicioPicker" styleClass="form-datepicker" GridPane.rowIndex="2" GridPane.columnIndex="1" 
+                   prefWidth="300" promptText="dd/MM/yyyy"/>
+
+        <!-- Fecha Fin -->
+        <Label text="Fecha Fin:" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <DatePicker fx:id="fechaFinPicker" styleClass="form-datepicker" GridPane.rowIndex="3" GridPane.columnIndex="1" 
+                   prefWidth="300" promptText="dd/MM/yyyy"/>
+    </GridPane>
+
+    <HBox spacing="30" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button text="Cancelar" onAction="#handleCancelar" styleClass="danger-button" minWidth="120" prefWidth="120"/>
+        <Button text="Guardar" onAction="#handleGuardar" styleClass="success-button" minWidth="120" prefWidth="120"/>
+    </HBox>
+</VBox>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.Scrumvest.controller.ProyectoSprintController"
+      stylesheets="@/css/styles.css"
+      spacing="15"
+      style="-fx-padding: 20;">
+    
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Button text="← Volver al Inicio" onAction="#handleBackToHome" styleClass="back-button"/>
+        <Label text="Mis Proyectos" styleClass="label-title"/>
+    </HBox>
+    
+    <HBox spacing="10" style="-fx-padding: 0 0 10 0;">
+        <Button text="Refrescar" onAction="#handleRefresh" styleClass="button-secondary"/>
+        <Button text="Nuevo Proyecto" onAction="#handleNewProject" styleClass="button-primary"/>
+        <Button text="Editar" onAction="#handleEditProject" styleClass="button-secondary"/> <!-- NUEVO -->
+        <Button text="Invitar Colaborador" onAction="#handleInvitarColaborador" styleClass="button-secondary"/> <!-- NUEVO -->
+        <Button text="Ver Sprints" onAction="#handleViewSprints" styleClass="button-secondary"/>
+        <Button text="Ver Historias" onAction="#handleVerHistoriasUsuario" styleClass="button-secondary"/>
+        <Button text="Eliminar" onAction="#handleDeleteProject" styleClass="button-danger"/>
+    </HBox>
+    
+    <TableView fx:id="proyectosTable" styleClass="table-view">
+        <columns>
+            <TableColumn fx:id="nombreColumn" text="Nombre" prefWidth="150"/>
+            <TableColumn fx:id="descripcionColumn" text="Descripción" prefWidth="250"/>
+            <TableColumn fx:id="fechaInicioColumn" text="Fecha Inicio" prefWidth="100"/>
+            <TableColumn fx:id="fechaFinColumn" text="Fecha Fin" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

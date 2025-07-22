@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.Scrumvest.controller.HomeController" 
+            stylesheets="@/css/styles.css">
+
+    <top>
+        <ToolBar>
+            <items>
+                <Button text="← Volver" onAction="#handleBackNavigation" styleClass="nav-button"/>
+
+
+
+                <Button text="Inicio" onAction="#handleViewDashboard" styleClass="nav-button"/>
+                <Button text="Mis Proyectos" onAction="#handleViewProjects" styleClass="nav-button"/>
+                <Button text="Panel de Administración" onAction="#handleAdminPanel" styleClass="nav-button"/>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="welcomeLabel" styleClass="welcome-user"/>
+                <Button text="Cerrar sesión" onAction="#handleLogout" styleClass="logout-button"/>
+            </items>
+        </ToolBar>
+    </top>
+    
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <ImageView fx:id="userAvatar" fitHeight="100" fitWidth="100"/>
+            <Label fx:id="userNameLabel" styleClass="user-name"/>
+            <Label fx:id="userEmailLabel" styleClass="user-email"/>
+            
+            <HBox spacing="20" alignment="CENTER">
+                <VBox styleClass="stats-box" alignment="CENTER" spacing="10">
+                    <Label text="Proyectos activos" styleClass="stats-title"/>
+                    <Label fx:id="projectCountLabel" styleClass="stats-value"/>
+                </VBox>
+                
+                <VBox styleClass="stats-box" alignment="CENTER" spacing="10">
+                    <Label text="Sprints en curso" styleClass="stats-title"/>
+                    <Label fx:id="sprintCountLabel" styleClass="stats-value"/>
+                </VBox>
+                
+                <VBox styleClass="stats-box" alignment="CENTER" spacing="10">
+                    <Label text="Tareas pendientes" styleClass="stats-title"/>
+                    <Label fx:id="taskCountLabel" styleClass="stats-value"/>
+                </VBox>
+            </HBox>
+            
+            <Button text="Crear nuevo proyecto" onAction="#handleNewProject" styleClass="primary-button"/>
+        </VBox>
+    </center>
+    
+    <bottom>
+        <Label text="Scrumvest © 2023" styleClass="footer-text"/>
+    </bottom>
+</BorderPane>

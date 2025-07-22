@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.Scrumvest.controller.HistoriaUsuarioController"
+      spacing="15"
+      style="-fx-padding: 20;"
+      stylesheets="@/css/styles.css">
+
+
+
+    <Label text="Historias de Usuario" styleClass="label-title"/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+
+        <Label text="Título:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtTitulo" promptText="Título de la historia" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Descripción:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtDescripcion" promptText="Descripción corta" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Criterios de Aceptación:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtCriterios" promptText="Qué se espera que cumpla" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Prioridad:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboPrioridad" promptText="Selecciona prioridad" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Estado:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboEstado" promptText="Selecciona estado" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Guardar" fx:id="btnGuardar" onAction="#guardarHistoria" styleClass="button-primary"/>
+        <Button text="Eliminar" fx:id="btnEliminar" onAction="#eliminarHistoria" styleClass="button-danger"/>
+    </HBox>
+
+    <TableView fx:id="tablaHistorias" prefHeight="300" styleClass="table-view">
+        <columns>
+            <TableColumn fx:id="tituloColumn" text="Título" prefWidth="150"/>
+            <TableColumn fx:id="descripcionColumn" text="Descripción" prefWidth="200"/>
+            <TableColumn fx:id="criteriosColumn" text="Criterios" prefWidth="200"/>
+            <TableColumn fx:id="prioridadColumn" text="Prioridad" prefWidth="100"/>
+            <TableColumn fx:id="estadoColumn" text="Estado" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>

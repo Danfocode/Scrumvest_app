@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.example.Scrumvest.controller.NuevaTareaController"
+      stylesheets="@/css/styles.css"
+      spacing="20" alignment="TOP_CENTER" 
+      style="-fx-background-color: #F8FAFF; -fx-padding: 30;">
+
+    <Label text="Nueva Tarea" styleClass="dialog-title"/>
+
+    <GridPane hgap="15" vgap="15" style="-fx-padding: 0 20;">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="120" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <!-- Nombre -->
+        <Label text="Nombre:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="nombreField" styleClass="form-input" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <!-- Descripción -->
+        <Label text="Descripción:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextArea fx:id="descripcionField" styleClass="form-textarea" GridPane.rowIndex="1" GridPane.columnIndex="1" 
+                  wrapText="true" prefRowCount="4" />
+
+        <!-- Estado -->
+        <Label text="Estado:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <ComboBox fx:id="estadoCombo" styleClass="form-combo" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+        <!-- Prioridad -->
+        <Label text="Prioridad:" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <Spinner fx:id="prioridadSpinner" styleClass="form-spinner"/>
+            <Label styleClass="priority-hint" text="(1=Baja, 2=Media, 3=Alta)"/>
+        </HBox>
+
+        <!-- Fecha Límite -->
+        <Label text="Fecha Límite:" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <DatePicker fx:id="fechaLimitePicker" styleClass="form-datepicker" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="Cancelar" onAction="#handleCancelar" styleClass="danger-button"/>
+        <Button text="Guardar" onAction="#handleGuardar" styleClass="success-button"/>
+    </HBox>
+</VBox>
