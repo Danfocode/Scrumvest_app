@@ -17,44 +17,52 @@ public class AccountService {
 
     @Autowired
     private AccountRepo accountRepo;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Transactional(readOnly = true)
     public Optional<Account> login(String email, String password) {
-        return accountRepo.findByEmailWithRoles(email)
+        Optional<Account> accountOpt = accountRepo.findByEmailWithRoles(email)
                 .filter(account -> passwordEncoder.matches(password, account.getPassword()));
+        
+        // Si el login es exitoso, añadir la sesión al caché
+        accountOpt.ifPresent(account -> Session.addSession(email, account, Session.getCurrentRole()));
+        
+        return accountOpt;
     }
-    
+
     @Transactional
     public Account register(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        
+
         // Asignar rol por defecto (DEV) si no se especifica
         if (account.getRoles().isEmpty()) {
             account.addRole("DEV");
         }
-        
+
         return accountRepo.save(account);
     }
-    
+
     @Transactional(readOnly = true)
     public List<Account> findAllUsers() {
         return accountRepo.findAllWithRoles();
     }
-    
+
     @Transactional
     public void delete(Long id) {
-        accountRepo.deleteById(id);
+        accountRepo.findById(id).ifPresent(account -> {
+            Session.removeSession(account.getEmail()); // Eliminar sesión del caché
+            accountRepo.deleteById(id);
+        });
     }
-    
+
     // Método para verificar roles
     public boolean isCurrentUserInRole(String role) {
         Account currentUser = Session.getCurrentUser();
         return currentUser != null && currentUser.hasRole(role);
     }
-    
+
     @Transactional(readOnly = true)
     public Optional<Account> findById(Long id) {
         return accountRepo.findById(id);

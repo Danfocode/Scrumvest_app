@@ -39,6 +39,8 @@ public class TareaController {
     public void initialize() {
         configureTableColumns();
         loadTareas();
+        // Suscribirse a cambios en las tareas
+        Session.taskChangeProperty().addListener((obs, oldValue, newValue) -> loadTareas());
     }
 
     private void configureTableColumns() {
@@ -52,7 +54,7 @@ public class TareaController {
     private void loadTareas() {
         if (Session.getCurrentSprint() != null) {
             tareasTable.getItems().setAll(
-                tareaService.findBySprint(Session.getCurrentSprint().getId())
+                tareaService.getTasksInPriorityOrder(Session.getCurrentSprint().getId())
             );
         }
     }
@@ -92,7 +94,24 @@ public class TareaController {
         }
     }
 
-    // Métodos utilitarios
+    @FXML
+    private void handleCompletarTarea() {
+        Tarea selected = tareasTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            tareaService.cambiarEstadoTarea(selected.getId(), "COMPLETADA");
+            loadTareas();
+        }
+    }
+
+    @FXML
+    private void handleReabrirTarea() {
+        Tarea selected = tareasTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            tareaService.cambiarEstadoTarea(selected.getId(), "POR_HACER");
+            loadTareas();
+        }
+    }
+
     private void navigateTo(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -119,40 +138,6 @@ public class TareaController {
         }
     }
 
-    
-    
-    
-    
-    
-
-    @FXML
-    private void handleCompletarTarea() {
-        Tarea selected = tareasTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            tareaService.cambiarEstadoTarea(selected.getId(), "COMPLETADA");
-            loadTareas(); // Refrescar la tabla local
-        }
-    }
-
-    @FXML
-    private void handleReabrirTarea() {
-        Tarea selected = tareasTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            tareaService.cambiarEstadoTarea(selected.getId(), "PENDIENTE");
-            loadTareas();
-        }
-    }    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     private boolean confirmDelete(String tareaNombre) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmar eliminación");

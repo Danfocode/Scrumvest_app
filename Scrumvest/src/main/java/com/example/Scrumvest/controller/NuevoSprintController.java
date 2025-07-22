@@ -43,17 +43,9 @@ public class NuevoSprintController {
                 sprint.setFechaFin(fechaFinPicker.getValue());
                 sprint.setProyecto(Session.getCurrentProject());
                 sprint.setUsuario(Session.getCurrentUser());
-                sprint.setEstado("EN_CURSO"); // Estado en mayúsculas y correcto
+                sprint.setEstado("EN_CURSO");
                 
-                // Debug: Verificar datos antes de guardar
-                System.out.println("[DEBUG] Guardando sprint: " + sprint);
-                
-                Sprint savedSprint = sprintService.save(sprint);
-                Session.notifyDataChange(); // Notificar cambios
-                
-                // Debug: Verificar sprint guardado
-                System.out.println("[DEBUG] Sprint guardado con ID: " + savedSprint.getId());
-                
+                sprintService.save(sprint);
                 closeWindow();
             } catch (Exception e) {
                 showAlert("Error", "No se pudo guardar el sprint: " + e.getMessage());
@@ -68,14 +60,12 @@ public class NuevoSprintController {
     }
     
     private boolean validateFields() {
-        // Validar nombre
         if (nombreField.getText() == null || nombreField.getText().trim().isEmpty()) {
             showAlert("Error", "El nombre del sprint es obligatorio");
             nombreField.requestFocus();
             return false;
         }
         
-        // Validar fechas
         if (fechaInicioPicker.getValue() == null) {
             showAlert("Error", "La fecha de inicio es obligatoria");
             fechaInicioPicker.requestFocus();
@@ -88,17 +78,10 @@ public class NuevoSprintController {
             return false;
         }
         
-        // Validar rango de fechas
         if (fechaFinPicker.getValue().isBefore(fechaInicioPicker.getValue())) {
             showAlert("Error", "La fecha de fin debe ser posterior a la fecha de inicio");
             fechaFinPicker.requestFocus();
             return false;
-        }
-        
-        // Validar que la fecha de inicio no sea en el pasado
-        if (fechaInicioPicker.getValue().isBefore(LocalDate.now())) {
-            showAlert("Advertencia", "La fecha de inicio no puede ser en el pasado. ¿Desea continuar?");
-            // Aquí podrías agregar un diálogo de confirmación
         }
         
         return true;

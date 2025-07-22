@@ -12,19 +12,32 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthController {
 
-    @FXML private TextField emailField;
-    @FXML private PasswordField passwordField;
-    @FXML private ComboBox<String> roleCombo;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private ComboBox<String> roleCombo;
 
-    @FXML private TextField usernameField;
-    @FXML private TextField emailRegisterField;
-    @FXML private PasswordField passwordRegisterField;
-    @FXML private ComboBox<String> roleRegisterCombo;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private TextField emailRegisterField;
+    @FXML
+    private PasswordField passwordRegisterField;
+    @FXML
+    private ComboBox<String> roleRegisterCombo;
+
+    @FXML
+    private TextField nombreField;
+    @FXML
+    private TextField apellidoField;
 
     private final AccountService accountService;
 
@@ -52,10 +65,24 @@ public class AuthController {
         String password = passwordField.getText();
         String selectedRole = roleCombo.getValue();
 
+        // Verificar si ya existe una sesión activa en el caché
+        if (Session.hasActiveSession(email)) {
+            Session.SessionData sessionData = Session.getSession(email);
+            if (sessionData.getRole().equals(selectedRole)) {
+                Session.setCurrentUser(sessionData.getAccount());
+                Session.setCurrentRole(selectedRole);
+                navigateToHome();
+                return;
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Sesión activa con un rol diferente. Cierra la sesión actual.");
+                return;
+            }
+        }
+
+        // Proceder con la autenticación si no hay sesión activa
         accountService.login(email, password).ifPresentOrElse(account -> {
             if (account.hasRole(selectedRole)) {
-                Session.setCurrentUser(account);
-                Session.setCurrentRole(selectedRole);
+                Session.addSession(email, account, selectedRole); // Añadir al caché de sesiones
                 navigateToHome();
             } else {
                 showAlert(Alert.AlertType.ERROR, "No tienes permiso para acceder como " + selectedRole);
@@ -78,8 +105,6 @@ public class AuthController {
             showErrorAlert("Error al cargar el formulario de registro", e);
         }
     }
-    @FXML private TextField nombreField;
-    @FXML private TextField apellidoField;
 
     @FXML
     private void handleRegister(ActionEvent event) {
@@ -106,7 +131,6 @@ public class AuthController {
             showErrorAlert("Error al registrar la cuenta", e);
         }
     }
-
 
     @FXML
     private void goToLogin(ActionEvent event) {

@@ -43,47 +43,10 @@ public class SprintController {
     public void initialize() {
         configureTableColumns();
         loadSprints();
+        // Suscribirse a cambios en los sprints
+        Session.dataChangeProperty().addListener((obs, oldValue, newValue) -> loadSprints());
     }
 
-    
-    
-    @FXML
-    private void handleIniciarSprint() {
-        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            System.out.println("[DEBUG] Iniciando sprint ID: " + selected.getId());
-
-            // Debug: estado antes del cambio
-            System.out.println("Estado actual: " + selected.getEstado());
-
-            sprintService.cambiarEstado(selected.getId(), "EN_CURSO");
-
-            // Debug: verifica después del cambio
-            Sprint actualizado = sprintService.findByProyecto(Session.getCurrentProject().getId())
-                .stream()
-                .filter(s -> s.getId().equals(selected.getId()))
-                .findFirst()
-                .orElse(null);
-
-            System.out.println("Estado después: " + (actualizado != null ? actualizado.getEstado() : "null"));
-
-            loadSprints();
-        }
-    }
-
-    @FXML
-    private void handleFinalizarSprint() {
-        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            sprintService.cambiarEstado(selected.getId(), "FINALIZADO");
-            loadSprints();
-        }
-    }
-    
-    
-    
-    
-    
     private void configureTableColumns() {
         nombreColumn.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         fechaInicioColumn.setCellValueFactory(new PropertyValueFactory<>("fechaInicio"));
@@ -94,12 +57,11 @@ public class SprintController {
     private void loadSprints() {
         if (Session.getCurrentProject() != null) {
             sprintsTable.getItems().setAll(
-                sprintService.findByProyecto(Session.getCurrentProject().getId())
+                sprintService.getSprintsInOrder(Session.getCurrentProject().getId())
             );
         }
     }
 
-    // Métodos de acción
     @FXML
     private void handleBackToProjects(ActionEvent event) {
         navigateTo("/views/proyectos.fxml", "Mis Proyectos - Scrumvest");
@@ -135,7 +97,74 @@ public class SprintController {
         }
     }
 
-    // Métodos utilitarios
+    @FXML
+    private void handleIniciarSprint() {
+        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            sprintService.cambiarEstado(selected.getId(), "EN_CURSO");
+            loadSprints();
+        }
+    }
+
+    @FXML
+    private void handleFinalizarSprint() {
+        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            sprintService.cambiarEstado(selected.getId(), "FINALIZADO");
+            loadSprints();
+        }
+    }
+
+    @FXML
+    private void handleAsignarSprint() {
+        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/asignarSprint.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
+
+                AsignarSprintController controller = loader.getController();
+                controller.setSprint(selected);
+
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Asignar colaboradores al sprint");
+                stage.showAndWait();
+
+                loadSprints();
+            } catch (IOException e) {
+                showError("Error al abrir diálogo de asignación", e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handlePreviousSprint() {
+        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
+        if (selected != null && Session.getCurrentProject() != null) {
+            Sprint previous = sprintService.getPreviousSprint(selected.getId(), Session.getCurrentProject().getId());
+            if (previous != null) {
+                sprintsTable.getSelectionModel().select(previous);
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "No hay sprint anterior.");
+            }
+        }
+    }
+
+    @FXML
+    private void handleNextSprint() {
+        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
+        if (selected != null && Session.getCurrentProject() != null) {
+            Sprint next = sprintService.getNextSprint(selected.getId(), Session.getCurrentProject().getId());
+            if (next != null) {
+                sprintsTable.getSelectionModel().select(next);
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "No hay sprint siguiente.");
+            }
+        }
+    }
+
     private void navigateTo(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -162,38 +191,6 @@ public class SprintController {
         }
     }
 
-    
-    
-    // En tu SprintController.java
-    @FXML
-    private void handleAsignarSprint() {
-        Sprint selected = sprintsTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/asignarSprint.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent root = loader.load();
-
-                AsignarSprintController controller = loader.getController();
-                controller.setSprint(selected);
-
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Asignar colaboradores al sprint");
-                stage.showAndWait();
-
-                loadSprints();
-            } catch (IOException e) {
-                showError("Error al abrir diálogo de asignación", e.getMessage());
-            }
-        }
-    }    
-    
-    
-    
-    
-    
-    
     private boolean confirmDelete(String sprintName) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmar eliminación");

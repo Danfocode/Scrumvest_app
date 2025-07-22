@@ -49,6 +49,7 @@ public class NuevaTareaController {
             tarea.setPrioridad(prioridadSpinner.getValue());
             tarea.setFechaLimite(fechaLimitePicker.getValue());
             tarea.setSprint(Session.getCurrentSprint());
+            tarea.setFechaCreacion(LocalDate.now());
             
             tareaService.save(tarea);
             closeWindow();
