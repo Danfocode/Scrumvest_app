@@ -67,4 +67,9 @@ public class AccountService {
     public Optional<Account> findById(Long id) {
         return accountRepo.findById(id);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existeCorreo(String email) {
+        return accountRepo.findByEmail(email).isPresent();
+    }
 }

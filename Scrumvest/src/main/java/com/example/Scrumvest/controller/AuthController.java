@@ -12,34 +12,40 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Component;
+
+import java.util.regex.Pattern;
 
 @Component
 public class AuthController {
 
-    @FXML
-    private TextField emailField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private ComboBox<String> roleCombo;
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
+    @FXML private ComboBox<String> roleCombo;
 
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private TextField emailRegisterField;
-    @FXML
-    private PasswordField passwordRegisterField;
-    @FXML
-    private ComboBox<String> roleRegisterCombo;
+    @FXML private TextField usernameField;
+    @FXML private TextField emailRegisterField;
+    @FXML private PasswordField passwordRegisterField;
+    @FXML private ComboBox<String> roleRegisterCombo;
 
-    @FXML
-    private TextField nombreField;
-    @FXML
-    private TextField apellidoField;
+    @FXML private TextField nombreField;
+    @FXML private TextField apellidoField;
 
     private final AccountService accountService;
+
+    // Patrones para validaciones con expresiones regulares
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+    );
+    private static final Pattern NAME_PATTERN = Pattern.compile(
+        "^[A-Za-z\\s]+$"
+    );
+    private static final Pattern USERNAME_PATTERN = Pattern.compile(
+        "^[A-Za-z0-9_]{3,30}$"
+    );
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
+        "^.{8,}$"
+    );
 
     @Autowired
     public AuthController(AccountService accountService) {
@@ -64,6 +70,11 @@ public class AuthController {
         String email = emailField.getText();
         String password = passwordField.getText();
         String selectedRole = roleCombo.getValue();
+
+        // Validar campos de login
+        if (!validarCamposLogin(email, password, selectedRole)) {
+            return;
+        }
 
         // Verificar si ya existe una sesión activa en el caché
         if (Session.hasActiveSession(email)) {
@@ -115,8 +126,8 @@ public class AuthController {
         String password = passwordRegisterField.getText();
         String role = roleRegisterCombo.getValue();
 
-        if (nombre.isEmpty() || apellido.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Todos los campos son obligatorios");
+        // Validar campos de registro
+        if (!validarCamposRegistro(nombre, apellido, username, email, password, role)) {
             return;
         }
 
@@ -165,6 +176,118 @@ public class AuthController {
     private void configureHomeForRole(Parent root) {
         String role = Session.getCurrentRole();
         // Configuración personalizada por rol si es necesario
+    }
+
+    private boolean validarCamposLogin(String email, String password, String role) {
+        // Validar correo
+        if (email == null || email.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "El correo es obligatorio.");
+            return false;
+        }
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            showAlert(Alert.AlertType.WARNING, "El correo debe tener un formato válido (ejemplo: usuario@dominio.com).");
+            return false;
+        }
+        if (email.length() > 100) {
+            showAlert(Alert.AlertType.WARNING, "El correo no puede exceder los 100 caracteres.");
+            return false;
+        }
+
+        // Validar contraseña
+        if (password == null || password.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "La contraseña es obligatoria.");
+            return false;
+        }
+        if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            showAlert(Alert.AlertType.WARNING, 
+                "La contraseña debe tener al menos 8 caracteres");
+            return false;
+        }
+
+        // Validar rol
+        if (role == null) {
+            showAlert(Alert.AlertType.WARNING, "Debes seleccionar un rol.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validarCamposRegistro(String nombre, String apellido, String username, String email, String password, String role) {
+        // Validar nombre
+        if (nombre == null || nombre.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "El nombre es obligatorio.");
+            return false;
+        }
+        if (!NAME_PATTERN.matcher(nombre).matches()) {
+            showAlert(Alert.AlertType.WARNING, "El nombre solo puede contener letras y espacios.");
+            return false;
+        }
+        if (nombre.length() < 2 || nombre.length() > 50) {
+            showAlert(Alert.AlertType.WARNING, "El nombre debe tener entre 2 y 50 caracteres.");
+            return false;
+        }
+
+        // Validar apellido
+        if (apellido == null || apellido.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "El apellido es obligatorio.");
+            return false;
+        }
+        if (!NAME_PATTERN.matcher(apellido).matches()) {
+            showAlert(Alert.AlertType.WARNING, "El apellido solo puede contener letras y espacios.");
+            return false;
+        }
+        if (apellido.length() < 2 || apellido.length() > 50) {
+            showAlert(Alert.AlertType.WARNING, "El apellido debe tener entre 2 y 50 caracteres.");
+            return false;
+        }
+
+        // Validar nombre de usuario
+        if (username == null || username.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "El nombre de usuario es obligatorio.");
+            return false;
+        }
+        if (!USERNAME_PATTERN.matcher(username).matches()) {
+            showAlert(Alert.AlertType.WARNING, "El nombre de usuario solo puede contener letras, números y guiones bajos, y debe tener entre 3 y 30 caracteres.");
+            return false;
+        }
+
+        // Validar correo
+        if (email == null || email.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "El correo es obligatorio.");
+            return false;
+        }
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            showAlert(Alert.AlertType.WARNING, "El correo debe tener un formato válido (ejemplo: usuario@dominio.com).");
+            return false;
+        }
+        if (email.length() > 100) {
+            showAlert(Alert.AlertType.WARNING, "El correo no puede exceder los 100 caracteres.");
+            return false;
+        }
+        if (accountService.existeCorreo(email)) {
+            showAlert(Alert.AlertType.WARNING, "El correo ya está registrado.");
+            return false;
+        }
+
+        // Validar contraseña
+        if (password == null || password.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "La contraseña es obligatoria.");
+            return false;
+        }
+        if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            showAlert(Alert.AlertType.WARNING, 
+                "La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.");
+            return false;
+        }
+
+        // Validar rol
+        if (role == null) {
+            showAlert(Alert.AlertType.WARNING, "Debes seleccionar un rol.");
+            return false;
+        }
+
+        return true;
     }
 
     private void showAlert(Alert.AlertType type, String message) {
